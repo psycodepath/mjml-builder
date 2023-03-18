@@ -7,7 +7,7 @@ import (
 
 func TestMjPreview_AllowedAttributes(t *testing.T) {
 	preview := MjPreview{}
-	assert.Nil(t, preview.AllowedAttributes())
+	assert.Equal(t, []string{}, preview.AllowedAttributes())
 }
 
 func TestMjPreview_Type(t *testing.T) {
