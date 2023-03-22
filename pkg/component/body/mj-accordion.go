@@ -173,11 +173,12 @@ type MjAccordionText struct {
 	Border     string
 	Background string
 	CssClass   string
+	Color      string
 	Font       *component.Font
 	Padding    *component.Padding
 }
 
-func (m *MjAccordionText) attributes() []component.Attribute {
+func (m *MjAccordionText) Attributes() []component.Attribute {
 	var attributes []component.Attribute
 
 	if m.Border != "" {
@@ -191,8 +192,8 @@ func (m *MjAccordionText) attributes() []component.Attribute {
 		attributes = append(attributes, component.Attribute{Name: "css-class", Content: m.CssClass})
 	}
 
-	if m.Border != "" {
-		attributes = append(attributes, component.Attribute{Name: "border", Content: m.Border})
+	if m.Color != "" {
+		attributes = append(attributes, component.Attribute{Name: "color", Content: m.Color})
 	}
 
 	attributes = append(attributes, m.Padding.Attributes()...)
@@ -206,7 +207,7 @@ func (m *MjAccordionText) Type() string {
 }
 
 func (m *MjAccordionText) Render() []byte {
-	attributes := m.attributes()
+	attributes := m.Attributes()
 	return component.RenderComponent(m.Type(), &attributes, m.Content)
 }
 
