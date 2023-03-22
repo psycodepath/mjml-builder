@@ -99,22 +99,22 @@ func (m *MjAccordionElement) Attributes() []component.Attribute {
 	return attributes
 }
 
-func (a MjAccordionElement) Type() string {
+func (a *MjAccordionElement) Type() string {
 	return "mj-accordion-element"
 }
 
 func (m *MjAccordionElement) Render() []byte {
-	var sb = strings.Builder{}
+	var sb strings.Builder
 
-	sb.Write(m.Title.Render())
-	sb.Write(m.Text.Render())
+	sb.WriteString(string(m.Title.Render()))
+	sb.WriteString(string(m.Text.Render()))
 
 	attributes := m.Attributes()
 	return component.RenderComponent(m.Type(), &attributes, sb.String())
 }
 
 func (m *MjAccordionElement) AllowedAttributes() []string {
-	//TODO implement me
+
 	panic("implement me")
 }
 
