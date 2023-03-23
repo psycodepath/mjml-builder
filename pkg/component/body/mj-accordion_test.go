@@ -8,21 +8,53 @@ import (
 	"testing"
 )
 
-const expectedTitle = "<mj-accordion-title border=\"1px solid black\" background-color=\"lime\" css-class=\"foo\" font-family=\"Comic Sans\" padding=\"40px 20px\" padding-top=\"40px\" padding-right=\"20px\" padding-bottom=\"40px\" padding-left=\"20px\">This is Sparta</mj-accordion-title>"
-const expectedText = "<mj-accordion-text border=\"1px solid black\" background-color=\"brown\" css-class=\"foo\" color=\"#F00\" padding=\"40px 20px\" padding-top=\"40px\" padding-right=\"20px\" padding-bottom=\"40px\" padding-left=\"20px\" font-family=\"Comic Sans\" font-size=\"12px\" font-weight=\"700\" letter-spacing=\"37px\" line-height=\"100px\">tiny man makes tiny library</mj-accordion-text>"
+const expectedTitle = "<mj-accordion-title border=\"1px solid black\" background-color=\"bordeaux\" css-class=\"foo\" font-family=\"Comic Sans\" padding=\"40px 20px\" padding-top=\"40px\" padding-right=\"20px\" padding-bottom=\"40px\" padding-left=\"20px\">This is Sparta</mj-accordion-title>"
+const expectedText = "<mj-accordion-text border=\"1px solid black\" background-color=\"bordeaux\" css-class=\"foo\" color=\"#F00\" padding=\"40px 20px\" padding-top=\"40px\" padding-right=\"20px\" padding-bottom=\"40px\" padding-left=\"20px\" font-family=\"Comic Sans\" font-size=\"12px\" font-weight=\"700\" letter-spacing=\"37px\" line-height=\"100px\">tiny man makes tiny library</mj-accordion-text>"
 
-func getExpectedTitleValues() map[string]string {
-	return map[string]string{
-		"border":           "1px solid black",
-		"background-color": "lime",
-		"css-class":        "foo",
-		"font-family":      "Comic Sans",
-		"padding":          "40px 20px",
-		"padding-top":      "40px",
-		"padding-right":    "20px",
-		"padding-bottom":   "40px",
-		"padding-left":     "20px",
+var basicValues = map[string]string{
+	"border":           "1px solid black",
+	"background-color": "bordeaux",
+	"css-class":        "foo",
+	"font-family":      "Comic Sans",
+}
+
+var padding = map[string]string{
+	"padding":        "40px 20px",
+	"padding-top":    "40px",
+	"padding-right":  "20px",
+	"padding-bottom": "40px",
+	"padding-left":   "20px",
+}
+
+var icon = map[string]string{
+	"icon-align":         "left",
+	"icon-height":        "32px",
+	"icon-position":      "left",
+	"icon-unwrapped-alt": "An image",
+	"icon-unwrapped-url": "http://image.example/turd.gif",
+	"icon-width":         "100px",
+	"icon-wrapped-alt":   "Another image",
+	"icon-wrapped-url":   "http:///image.example/bag.jpg",
+}
+
+var font = map[string]string{
+	"font-family":    "Comic Sans",
+	"font-size":      "12px",
+	"font-weight":    "700",
+	"letter-spacing": "37px",
+	"line-height":    "100px",
+}
+
+func mergeValues(values ...map[string]string) map[string]string {
+	var merged = map[string]string{}
+
+	for _, m := range values {
+		for key, value := range m {
+			merged[key] = value
+		}
 	}
+
+	return merged
 }
 
 func createTitleWithValues(values map[string]string) MjAccordionTitle {
@@ -38,25 +70,6 @@ func createTitleWithValues(values map[string]string) MjAccordionTitle {
 			Bottom:  values["padding-bottom"],
 			Left:    values["padding-left"],
 		},
-	}
-}
-
-func getExpectedTextValues() map[string]string {
-	return map[string]string{
-		"border":           "1px solid black",
-		"background-color": "brown",
-		"css-class":        "foo",
-		"color":            "#F00",
-		"padding":          "40px 20px",
-		"padding-top":      "40px",
-		"padding-right":    "20px",
-		"padding-bottom":   "40px",
-		"padding-left":     "20px",
-		"font-family":      "Comic Sans",
-		"font-size":        "12px",
-		"font-weight":      "700",
-		"letter-spacing":   "37px",
-		"line-height":      "100px",
 	}
 }
 
@@ -80,28 +93,6 @@ func createTextWithValues(values map[string]string) MjAccordionText {
 			LetterSpacing: values["letter-spacing"],
 			LineHeight:    values["line-height"],
 		},
-	}
-}
-
-func getExpectedElementValues() map[string]string {
-	return map[string]string{
-		"border":             "1px solid black",
-		"background-color":   "bordeaux",
-		"css-class":          "foo",
-		"font-family":        "Comic Sans",
-		"padding":            "40px 20px",
-		"padding-top":        "40px",
-		"padding-right":      "20px",
-		"padding-bottom":     "40px",
-		"padding-left":       "20px",
-		"icon-align":         "left",
-		"icon-height":        "32px",
-		"icon-position":      "left",
-		"icon-unwrapped-alt": "An image",
-		"icon-unwrapped-url": "http://image.example/turd.gif",
-		"icon-width":         "100px",
-		"icon-wrapped-alt":   "Another image",
-		"icon-wrapped-url":   "http:///image.example/bag.jpg",
 	}
 }
 
@@ -146,6 +137,33 @@ func getExpectedElementRender() string {
 	return sb.String()
 }
 
+func getExpectedAccordionRender() string {
+	var sb strings.Builder
+
+	sb.WriteString("<mj-accordion border=\"1px solid black\" background-color=\"bordeaux\" font-family=\"Comic Sans\" css-class=\"foo\" padding=\"40px 20px\" padding-top=\"40px\" padding-right=\"20px\" padding-bottom=\"40px\" padding-left=\"20px\" icon-align=\"left\" icon-height=\"32px\" icon-position=\"left\" icon-unwrapped-alt=\"An image\" icon-unwrapped-url=\"http://image.example/turd.gif\" icon-width=\"100px\" icon-wrapped-alt=\"Another image\" icon-wrapped-url=\"http:///image.example/bag.jpg\">")
+	sb.WriteString(getExpectedElementRender())
+	sb.WriteString("</mj-accordion>")
+
+	return sb.String()
+}
+
+func createAccordionWithValues(values map[string]string) MjAccordion {
+	return MjAccordion{
+		Border:     values["border"],
+		Background: values["background-color"],
+		CssClass:   values["css-class"],
+		FontFamily: values["font-family"],
+		Padding: &component.Padding{
+			Padding: values["padding"],
+			Top:     values["padding-top"],
+			Right:   values["padding-right"],
+			Bottom:  values["padding-bottom"],
+			Left:    values["padding-left"],
+		},
+		Icon: createIconFromValues(values),
+	}
+}
+
 // title
 func TestMjAccordionTitle_AllowedAttributes(t *testing.T) {
 
@@ -171,7 +189,7 @@ func TestMjAccordionTitle_AllowedAttributes(t *testing.T) {
 
 func TestMjAccordionTitle_Attributes(t *testing.T) {
 
-	values := getExpectedTitleValues()
+	values := mergeValues(basicValues, padding)
 	title := createTitleWithValues(values)
 
 	actual := title.Attributes()
@@ -188,11 +206,11 @@ func TestMjAccordionTitle_Attributes(t *testing.T) {
 
 func TestMjAccordionTitle_Type(t *testing.T) {
 	title := MjAccordionTitle{}
-	assert.Equal(t, "mj-accordion-tile", title.Type())
+	assert.Equal(t, "mj-accordion-title", title.Type())
 }
 
 func TestMjAccordionTitle_Render(t *testing.T) {
-	title := createTitleWithValues(getExpectedTitleValues())
+	title := createTitleWithValues(mergeValues(basicValues, padding))
 	title.Title = "This is Sparta"
 	actual := title.Render()
 
@@ -210,8 +228,9 @@ func TestMjAccordionText_AllowedAttributes(t *testing.T) {
 		return fmt.Sprintf("MjAccordionText needs to to allow %s attribute", n)
 	}
 
-	assert.Exactly(t, 13, len(actual))
+	assert.Exactly(t, 14, len(actual))
 	assert.Contains(t, actual, "border", message("border"))
+	assert.Contains(t, actual, "color", message("color"))
 	assert.Contains(t, actual, "background-color", message("background-color"))
 	assert.Contains(t, actual, "css-class", message("border"))
 	assert.Contains(t, actual, "padding", message("padding"))
@@ -222,14 +241,14 @@ func TestMjAccordionText_AllowedAttributes(t *testing.T) {
 }
 
 func TestMjAccordionText_Attributes(t *testing.T) {
-	values := getExpectedTextValues()
+	values := mergeValues(basicValues, map[string]string{"color": "#F00"}, padding, font)
 	text := createTextWithValues(values)
 
 	actual := text.Attributes()
 	allowed := text.AllowedAttributes()
 
 	// happy path with every attribute set
-	assert.Exactly(t, 9, len(actual))
+	assert.Exactly(t, 14, len(actual))
 	for _, attr := range actual {
 		assert.Contains(t, allowed, attr.Name, fmt.Sprintf("%s is not an allowed attribute", attr.Name))
 		assert.Equal(t, values[attr.Name], attr.Content, fmt.Sprintf("Excpected \"%s\" but got \"%s\"", values[attr.Name], attr.Content))
@@ -242,7 +261,7 @@ func TestMjAccordionText_Type(t *testing.T) {
 }
 
 func TestMjAccordionText_Render(t *testing.T) {
-	values := getExpectedTextValues()
+	values := mergeValues(basicValues, map[string]string{"color": "#F00"}, padding, font)
 	text := createTextWithValues(values)
 	text.Content = "tiny man makes tiny library"
 	assert.Equal(t, expectedText, string(text.Render()))
@@ -250,14 +269,14 @@ func TestMjAccordionText_Render(t *testing.T) {
 
 // Element
 func TestMjAccordionElement_AllowedAttributes(t *testing.T) {
-	values := getExpectedElementValues()
+	values := mergeValues(basicValues, padding, icon)
 	element := createElementWithValues(values)
 
 	actual := element.Attributes()
 	allowed := element.AllowedAttributes()
 
 	// happy path with every attribute set
-	assert.Exactly(t, 9, len(actual))
+	assert.Exactly(t, 17, len(actual))
 	for _, attr := range actual {
 		assert.Contains(t, allowed, attr.Name, fmt.Sprintf("%s is not an allowed attribute", attr.Name))
 		assert.Equal(t, values[attr.Name], attr.Content, fmt.Sprintf("Excpected \"%s\" but got \"%s\"", values[attr.Name], attr.Content))
@@ -265,14 +284,14 @@ func TestMjAccordionElement_AllowedAttributes(t *testing.T) {
 }
 
 func TestMjAccordionElement_Attributes(t *testing.T) {
-	values := getExpectedElementValues()
+	values := mergeValues(basicValues, padding, icon)
 	text := createElementWithValues(values)
 
 	actual := text.Attributes()
 	allowed := text.AllowedAttributes()
 
 	// happy path with every attribute set
-	assert.Exactly(t, 9, len(actual))
+	assert.Exactly(t, 17, len(actual))
 	for _, attr := range actual {
 		assert.Contains(t, allowed, attr.Name, fmt.Sprintf("%s is not an allowed attribute", attr.Name))
 		assert.Equal(t, values[attr.Name], attr.Content, fmt.Sprintf("Excpected \"%s\" but got \"%s\"", values[attr.Name], attr.Content))
@@ -285,9 +304,9 @@ func TestMjAccordionElement_Type(t *testing.T) {
 }
 
 func TestMjAccordionElement_Render(t *testing.T) {
-	element := createElementWithValues(getExpectedElementValues())
-	title := createTitleWithValues(getExpectedTitleValues())
-	text := createTextWithValues(getExpectedTextValues())
+	element := createElementWithValues(mergeValues(basicValues, padding, icon))
+	title := createTitleWithValues(mergeValues(basicValues, padding))
+	text := createTextWithValues(mergeValues(basicValues, map[string]string{"color": "#F00"}, padding, font))
 	element.Title = &title
 	element.Title.Title = "This is Sparta"
 	element.Text = &text
@@ -299,7 +318,22 @@ func TestMjAccordionElement_Render(t *testing.T) {
 // accordion
 
 func TestMjAccordion_AllowedAttributes(t *testing.T) {
+	a := MjAccordion{}
+	actual := a.AllowedAttributes()
 
+	message := func(n string) string {
+		return fmt.Sprintf("MjAccordionText needs to to allow %s attribute", n)
+	}
+
+	assert.Exactly(t, 18, len(actual))
+	assert.Contains(t, actual, "border", message("border"))
+	assert.Contains(t, actual, "background-color", message("background-color"))
+	assert.Contains(t, actual, "css-class", message("border"))
+	assert.Contains(t, actual, "padding", message("padding"))
+	assert.Contains(t, actual, "padding-top", message("padding-top"))
+	assert.Contains(t, actual, "padding-right", message("padding-right"))
+	assert.Contains(t, actual, "padding-bottom", message("padding-bottom"))
+	assert.Contains(t, actual, "padding-left", message("padding-left"))
 }
 
 func TestMjAccordion_Attributes(t *testing.T) {
@@ -307,9 +341,22 @@ func TestMjAccordion_Attributes(t *testing.T) {
 }
 
 func TestMjAccordion_Type(t *testing.T) {
-
+	a := MjAccordion{}
+	assert.Equal(t, "mj-accordion", a.Type())
 }
 
 func TestMjAccordion_Render(t *testing.T) {
+	var v = mergeValues(basicValues, padding)
+	title := createTitleWithValues(v)
+	title.Title = "This is Sparta"
+	text := createTextWithValues(mergeValues(basicValues, map[string]string{"color": "#F00"}, padding, font))
+	text.Content = "tiny man makes tiny library"
+	element := createElementWithValues(mergeValues(v, icon))
+	element.Title = &title
+	element.Text = &text
 
+	accordion := createAccordionWithValues(mergeValues(v, icon))
+	accordion.Elements = append(accordion.Elements, &element)
+
+	assert.Equal(t, getExpectedAccordionRender(), string(accordion.Render()))
 }

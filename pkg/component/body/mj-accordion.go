@@ -27,7 +27,7 @@ func (m *MjAccordion) Attributes() []component.Attribute {
 	}
 
 	if m.Background != "" {
-		attributes = append(attributes, component.Attribute{Name: "container-background-color", Content: m.Background})
+		attributes = append(attributes, component.Attribute{Name: "background-color", Content: m.Background})
 	}
 
 	if m.FontFamily != "" {
@@ -44,14 +44,15 @@ func (m *MjAccordion) Attributes() []component.Attribute {
 }
 
 func (m *MjAccordion) Render() []byte {
-	var attributes []component.Attribute = m.Attributes()
+	attributes := m.Attributes()
 	var sb = strings.Builder{}
 
 	for _, element := range m.Elements {
-		sb.Write(element.Render())
+		render := string(element.Render())
+		sb.WriteString(render)
 	}
 
-	return component.RenderComponent(m.Type(), &attributes, "")
+	return component.RenderComponent(m.Type(), &attributes, sb.String())
 }
 
 func (m MjAccordion) AllowedAttributes() []string {
@@ -60,7 +61,12 @@ func (m MjAccordion) AllowedAttributes() []string {
 	allowed = append(allowed, m.Padding.AllowedAttributes()...)
 	allowed = append(allowed, m.Icon.AllowedAttributes()...)
 
-	return allowed
+	return append(allowed, []string{
+		"border",
+		"background-color",
+		"css-class",
+		"font-family",
+	}...)
 }
 
 type MjAccordionElement struct {
@@ -114,8 +120,17 @@ func (m *MjAccordionElement) Render() []byte {
 }
 
 func (m *MjAccordionElement) AllowedAttributes() []string {
+	var allowed []string
 
-	panic("implement me")
+	allowed = append(allowed, m.Padding.AllowedAttributes()...)
+	allowed = append(allowed, m.Icon.AllowedAttributes()...)
+
+	return append(allowed, []string{
+		"border",
+		"background-color",
+		"css-class",
+		"font-family",
+	}...)
 }
 
 type MjAccordionTitle struct {
@@ -213,7 +228,7 @@ func (m *MjAccordionText) Render() []byte {
 
 func (m *MjAccordionText) AllowedAttributes() []string {
 
-	attributes := []string{"border", "background-color", "css-class"}
+	attributes := []string{"border", "background-color", "css-class", "color"}
 	attributes = append(attributes, m.Padding.AllowedAttributes()...)
 	attributes = append(attributes, m.Font.AllowedAttributes()...)
 
